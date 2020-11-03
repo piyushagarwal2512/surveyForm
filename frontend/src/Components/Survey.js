@@ -21,9 +21,8 @@ export class Survey extends Component {
     componentDidMount=()=>{
 
         calculateDepth(data.form);
- console.log(data)
-
-     this.setState({surveyData:data})
+        console.log(data);
+        this.setState({surveyData:data});
     }
 
 
@@ -33,12 +32,14 @@ export class Survey extends Component {
         let question=event.target.getAttribute("question"),
          optionChoose=event.target.getAttribute("optionvalue"),
          data=this.state.surveyData.form[question],
-         questionAnswered=this.state.questionAnswered +1,
+         questionAnswered=Object.keys(this.state.optionData).length,
          progress=100;
         if(data.optionDta && data.optionDta[optionChoose] ){
-            progress=parseInt((questionAnswered/(questionAnswered + (data.depth ?data.depth[`${optionChoose}-count`]:0)))*100);
+           
         if(!this.state.optionData[question])
         {
+            questionAnswered+=1;
+            progress=parseInt((questionAnswered/(questionAnswered + (data.depth ?data.depth[`${optionChoose}-count`]:0)))*100);
             this.setState((prevState)=>{
 
                 let obj={...prevState.optionData}
@@ -52,10 +53,20 @@ export class Survey extends Component {
         }
         else
         {
+            progress=parseInt((questionAnswered/(questionAnswered + (data.depth ?data.depth[`${optionChoose}-count`]:0)))*100);
             this.setState((prevState)=>{
 
+                let keyIndex=Object.keys(prevState.optionData).findIndex((ele)=>ele===question);
+                let keys=Object.keys(prevState.optionData);
                 let obj={...prevState.optionData}
                 obj[question].value=optionChoose
+                 for(var i=0;i<keys.length;i++)
+                 {
+                     if(i>keyIndex)
+                     {
+                         delete obj[keys[i]]
+                     }
+                 }
                 return {
                     optionData:obj,
                     questionAnswered,

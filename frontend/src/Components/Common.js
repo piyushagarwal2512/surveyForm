@@ -32,9 +32,9 @@ export function calculateDepth(obj){
                 obj[keys[i]].depth={};
                 obj[keys[i]].depth[countVar]=max>0?max:0;
             }
-           // obj[keys[i]].optionDta[countVar]=
+
             max=-9999;
         }
     }
-//return obj
+
 }
