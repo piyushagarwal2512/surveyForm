@@ -1,3 +1,6 @@
+//add a depth object on every key of form object if there is optionDta contains the depth of every option type
+//if u want to see that i print the updated obj in console when componentdidmount is called of survey component
+
 var max=-9999
 function optionRecursion(obj,question,count){
 

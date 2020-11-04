@@ -5,6 +5,8 @@ import {calculateDepth} from "./Common"
 
 export class Survey extends Component {
 
+    //optionData stored the answer of every question
+    //flag is used to track the survey completion if true then survey is completed
     constructor(props) {
         super(props)
     
@@ -19,7 +21,7 @@ export class Survey extends Component {
     }
 
     componentDidMount=()=>{
-
+        //calculate depth
         calculateDepth(data.form);
         console.log(data);
         this.setState({surveyData:data});
@@ -28,12 +30,15 @@ export class Survey extends Component {
 
     optionClickHandler=(event)=>{
 
-        //console.log(event);
         let question=event.target.getAttribute("question"),
          optionChoose=event.target.getAttribute("optionvalue"),
+         
          data=this.state.surveyData.form[question],
+
          questionAnswered=Object.keys(this.state.optionData).length,
+
          progress=100;
+
         if(data.optionDta && data.optionDta[optionChoose] ){
            
         if(!this.state.optionData[question])
@@ -79,14 +84,14 @@ export class Survey extends Component {
 }else{
  this.setState({flag:true,progress})
 }
-        
-
     }
     
     render() {
         const surveyKeys=this.state.surveyData && this.state.surveyData.form ? Object.keys( this.state.surveyData.form):[];
         const optionKeys=this.state.optionData ?Object.keys(this.state.optionData):[];
-        //let progressWidth=parseInt((this.state.questionAnswered/(this.state.questionAnswered + 8))*100);
+        const form=this.state.surveyData && this.state.surveyData.form
+        const optionForm=this.state.optionData;
+
     return <div style={{top:"3"}}>
         <div style={{width:`${this.state.progress}%`,height:"40px",backgroundColor:"red"}}>
             <p>{ `${this.state.progress} % progress`}</p>
@@ -99,8 +104,8 @@ export class Survey extends Component {
                         <div>
                              {
                                <>
-                                 <p>{`${ this.state.surveyData.form[surveyKeys[0]].value.name}`}</p>
-                                  <OptionComponent options={ this.state.surveyData.form[surveyKeys[0]].value.options} questionId={surveyKeys[0]} clickHandler={this.optionClickHandler}/>
+                                 <p>{`${ form[surveyKeys[0]].value.name}`}</p>
+                                  <OptionComponent options={ form[surveyKeys[0]].value.options} questionId={surveyKeys[0]} clickHandler={this.optionClickHandler}/>
                                   </>
                              }
                         </div>
@@ -111,10 +116,10 @@ export class Survey extends Component {
                      this.state.optionData && optionKeys.length >0 && (
                         <div>
                              {
-                              optionKeys.map((ele,index)=><>
-                              <p>{`${ this.state.surveyData.form[this.state.surveyData.form[ele].optionDta[this.state.optionData[ele].value]].value.name}`}</p>
-                               <OptionComponent options={ this.state.surveyData.form[this.state.surveyData.form[ele].optionDta[this.state.optionData[ele].value]].value.options} questionId={this.state.surveyData.form[ele].optionDta[this.state.optionData[ele].value]} clickHandler={this.optionClickHandler}/>
-                               </>) 
+                              optionKeys.map((ele,index)=><React.Fragment key={`${ele}-${index}`}>
+                              <p>{`${ form[form[ele].optionDta[optionForm[ele].value]].value.name}`}</p>
+                               <OptionComponent options={ form[form[ele].optionDta[optionForm[ele].value]].value.options} questionId={form[ele].optionDta[optionForm[ele].value]} clickHandler={this.optionClickHandler}/>
+                               </React.Fragment>) 
                              }
                         </div>
 
